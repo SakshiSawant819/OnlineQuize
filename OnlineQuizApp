@@ -1,0 +1,113 @@
+import java.util.ArrayList;
+import java.util.Scanner;
+
+class Question {
+    private String questionText;
+    private String[] options;
+    private int correctAnswer;
+
+    // Constructor
+    public Question(String questionText, String[] options, int correctAnswer) {
+        this.questionText = questionText;
+        this.options = options;
+        this.correctAnswer = correctAnswer;
+    }
+
+    // Method to display question and options
+    public void displayQuestion() {
+        System.out.println(questionText);
+        for (int i = 0; i < options.length; i++) {
+            System.out.println((i + 1) + ". " + options[i]);
+        }
+    }
+
+    // Method to check if the answer is correct
+    public boolean isCorrect(int userAnswer) {
+        return userAnswer == correctAnswer;
+    }
+}
+
+class Quiz {
+    private ArrayList<Question> questions;
+    private int score;
+
+    // Constructor
+    public Quiz() {
+        questions = new ArrayList<>();
+        score = 0;
+    }
+
+    // Method to add a question to the quiz
+    public void addQuestion(Question question) {
+        questions.add(question);
+    }
+
+    // Method to start the quiz
+    public void start() {
+        Scanner scanner = new Scanner(System.in);
+
+        for (Question question : questions) {
+            question.displayQuestion();
+            System.out.print("Your answer: ");
+            int userAnswer = validateInput(scanner);
+
+            // Check answer and increment score if correct
+            if (question.isCorrect(userAnswer)) {
+                System.out.println("Correct!");
+                score++;
+            } else {
+                System.out.println("Incorrect!");
+            }
+            System.out.println();
+        }
+        
+        // Display final score
+        System.out.println("Quiz Complete! Your score: " + score + "/" + questions.size());
+        scanner.close();
+    }
+
+    // Method for input validation
+    private int validateInput(Scanner scanner) {
+        int userAnswer;
+        while (true) {
+            try {
+                userAnswer = Integer.parseInt(scanner.nextLine());
+                if (userAnswer < 1 || userAnswer > 4) {
+                    throw new NumberFormatException();
+                }
+                break;
+            } catch (NumberFormatException e) {
+                System.out.print("Invalid input. Please enter a number between 1 and 4: ");
+            }
+        }
+        return userAnswer;
+    }
+}
+
+public class OnlineQuizApp {
+    public static void main(String[] args) {
+        Quiz quiz = new Quiz();
+
+        // Adding questions to the quiz
+        quiz.addQuestion(new Question("What is the capital of France?", 
+                                      new String[]{"Berlin", "London", "Paris", "Rome"}, 3));
+        quiz.addQuestion(new Question("Which language is used primarily for Android development?", 
+                                      new String[]{"Swift", "Kotlin", "Java", "Python"}, 2));
+        quiz.addQuestion(new Question("What does HTML stand for?", 
+                                      new String[]{"Hyper Text Markup Language", "High Text Machine Language", 
+                                                   "Hyper Tabular Markup Language", "None of these"}, 1));
+        quiz.addQuestion(new Question("Who developed the theory of relativity?", 
+                                      new String[]{"Isaac Newton", "Albert Einstein", "Galileo Galilei", "Marie Curie"}, 2));
+        quiz.addQuestion(new Question("What is the smallest unit of life?", 
+                                      new String[]{"Atom", "Molecule", "Cell", "Organ"}, 3));
+        quiz.addQuestion(new Question("Which planet is known as the Red Planet?", 
+                                      new String[]{"Earth", "Mars", "Jupiter", "Saturn"}, 2));
+        quiz.addQuestion(new Question("What is the chemical symbol for water?", 
+                                      new String[]{"H2O", "O2", "CO2", "N2"}, 1));
+        quiz.addQuestion(new Question("Who painted the Mona Lisa?", 
+                                      new String[]{"Vincent van Gogh", "Leonardo da Vinci", "Pablo Picasso", "Claude Monet"}, 2));
+        
+        // Start the quiz
+        quiz.start();
+    }
+}
